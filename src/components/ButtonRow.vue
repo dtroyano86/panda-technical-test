@@ -1,9 +1,9 @@
 <template>
   <div class="button-row">
-    <button>Sort By ID</button>
-    <button>Sort By Priority</button>
-    <select>
-      <option :value="null">All Components</option>
+    <button @click="sortById">Sort By ID</button>
+    <button @click="sortByPriority">Sort By Priority</button>
+    <select @change="selectFilter($event)">
+      <option value="">All Components</option>
       <option v-for="type in componentTypes" :key="type" :value="type">{{ type }}</option>
     </select>
   </div>
@@ -20,6 +20,18 @@ export default {
       let types = [...new Set(this.components.map(c => c.type))]
       console.log(types)
       return types
+    }
+  },
+  methods: {
+    sortById: function () {
+      this.$emit('set_sort', 'id');
+    },
+    sortByPriority: function () {
+      this.$emit('set_sort', 'priority');
+    },
+    selectFilter: function (e) {
+      const type = !e.target.value.length ? null : e.target.value
+      this.$emit('set_filter', type);
     }
   }
 }

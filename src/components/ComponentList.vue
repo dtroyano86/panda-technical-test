@@ -2,9 +2,9 @@
   <div class="component-list">
     <h1>Components</h1>
 
-    <ButtonRow :components="components" />
+    <ButtonRow :components="components" v-on:set_sort="setSort" v-on:set_filter="setFilter" />
 
-    <template v-for="component in components" :key="component.id">
+    <template v-for="component in updatedComponents" :key="component.id">
       <ComponentRow :component="component" />
     </template>
   </div>
@@ -22,6 +22,30 @@ export default {
   },
   props: {
     components: Array
+  },
+  data: () => ({
+    sortBy: null,
+    filterBy: null,
+  }),
+  computed: {
+    updatedComponents: function() {
+      let updated = [...this.components];
+      if (this.sortBy) {
+        updated.sort((a, b) => a[this.sortBy] - b[this.sortBy]);
+      }
+      if (this.filterBy) {
+        updated = updated.filter((component) => component.type === this.filterBy);
+      }
+      return updated;
+    },
+  },
+  methods: {
+    setSort: function(sorter) {
+      this.sortBy = sorter;
+    },
+    setFilter: function(filter) {
+      this.filterBy = filter;
+    }
   }
 }
 </script>
